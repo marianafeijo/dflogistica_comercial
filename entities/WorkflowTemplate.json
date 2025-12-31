@@ -1,0 +1,49 @@
+{
+    "name": "WorkflowTemplate",
+    "type": "object",
+    "properties": {
+        "dia_offset": {
+            "type": "number",
+            "description": "N\u00famero de dias ap\u00f3s o cadastro (0 = dia do cadastro)"
+        },
+        "rotulo": {
+            "type": "string",
+            "description": "R\u00f3tulo descritivo (Hoje, Amanh\u00e3, Em 2 dias, etc)"
+        },
+        "tipo": {
+            "type": "string",
+            "enum": [
+                "E-mail",
+                "Liga\u00e7\u00e3o",
+                "WhatsApp",
+                "LinkedIn",
+                "Follow-up",
+                "Outro"
+            ],
+            "description": "Tipo de tarefa"
+        },
+        "descricao": {
+            "type": "string",
+            "description": "Descri\u00e7\u00e3o da tarefa"
+        },
+        "modelo_mensagem": {
+            "type": "string",
+            "description": "Modelo de mensagem/roteiro para esta tarefa"
+        },
+        "ativo": {
+            "type": "boolean",
+            "default": true,
+            "description": "Template ativo?"
+        },
+        "ordem": {
+            "type": "number",
+            "description": "Ordem de execu\u00e7\u00e3o"
+        }
+    },
+    "required": [
+        "dia_offset",
+        "tipo",
+        "descricao",
+        "ordem"
+    ]
+}

@@ -1,0 +1,90 @@
+{
+    "name": "Evento",
+    "type": "object",
+    "properties": {
+        "tipo": {
+            "type": "string",
+            "enum": [
+                "Viagem",
+                "Evento",
+                "Reuni\u00e3o"
+            ],
+            "description": "Tipo do evento"
+        },
+        "titulo": {
+            "type": "string",
+            "description": "T\u00edtulo do evento"
+        },
+        "data_inicio": {
+            "type": "string",
+            "format": "date",
+            "description": "Data de in\u00edcio"
+        },
+        "data_fim": {
+            "type": "string",
+            "format": "date",
+            "description": "Data de fim (para viagens)"
+        },
+        "hora": {
+            "type": "string",
+            "description": "Hora do evento (formato HH:mm)"
+        },
+        "local": {
+            "type": "string",
+            "description": "Local da viagem ou evento"
+        },
+        "empresas_visitar": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "nome": {
+                        "type": "string"
+                    },
+                    "concluido": {
+                        "type": "boolean",
+                        "default": false
+                    }
+                }
+            },
+            "description": "Lista de empresas a visitar (viagem)"
+        },
+        "metas": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "descricao": {
+                        "type": "string"
+                    },
+                    "concluido": {
+                        "type": "boolean",
+                        "default": false
+                    }
+                }
+            },
+            "description": "Metas do evento"
+        },
+        "lead_id": {
+            "type": "string",
+            "description": "ID do lead vinculado (reuni\u00e3o)"
+        },
+        "cliente": {
+            "type": "string",
+            "description": "Nome do cliente (reuni\u00e3o)"
+        },
+        "pautas": {
+            "type": "string",
+            "description": "Pautas da reuni\u00e3o"
+        },
+        "responsavel": {
+            "type": "string",
+            "description": "E-mail do respons\u00e1vel"
+        }
+    },
+    "required": [
+        "tipo",
+        "data_inicio",
+        "responsavel"
+    ]
+}

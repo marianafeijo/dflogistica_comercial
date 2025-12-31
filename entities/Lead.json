@@ -1,0 +1,129 @@
+{
+    "name": "Lead",
+    "type": "object",
+    "properties": {
+        "data_cadastro": {
+            "type": "string",
+            "format": "date",
+            "description": "Data de cadastro do lead"
+        },
+        "setor": {
+            "type": "string",
+            "enum": [
+                "Aliment\u00edcio",
+                "Automotivo",
+                "Constru\u00e7\u00e3o",
+                "Eletr\u00f4nicos",
+                "Farmac\u00eautico",
+                "T\u00eaxtil",
+                "Qu\u00edmico",
+                "Agro",
+                "Outro"
+            ],
+            "description": "Setor de atua\u00e7\u00e3o da empresa"
+        },
+        "empresa": {
+            "type": "string",
+            "description": "Nome da empresa"
+        },
+        "contatos": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "nome": {
+                        "type": "string",
+                        "description": "Nome do contato"
+                    },
+                    "email": {
+                        "type": "string",
+                        "description": "E-mail do contato"
+                    },
+                    "telefone": {
+                        "type": "string",
+                        "description": "Telefone do contato"
+                    },
+                    "whatsapp": {
+                        "type": "string",
+                        "description": "WhatsApp do contato"
+                    },
+                    "principal": {
+                        "type": "boolean",
+                        "default": false,
+                        "description": "Contato principal?"
+                    }
+                },
+                "required": [
+                    "nome"
+                ]
+            },
+            "description": "Lista de contatos da empresa"
+        },
+        "estado": {
+            "type": "string",
+            "enum": [
+                "AC",
+                "AL",
+                "AP",
+                "AM",
+                "BA",
+                "CE",
+                "DF",
+                "ES",
+                "GO",
+                "MA",
+                "MT",
+                "MS",
+                "MG",
+                "PA",
+                "PB",
+                "PR",
+                "PE",
+                "PI",
+                "RJ",
+                "RN",
+                "RS",
+                "RO",
+                "RR",
+                "SC",
+                "SP",
+                "SE",
+                "TO"
+            ],
+            "description": "Estado da empresa"
+        },
+        "site": {
+            "type": "string",
+            "description": "Site da empresa"
+        },
+        "tipo": {
+            "type": "string",
+            "enum": [
+                "Prospec\u00e7\u00e3o",
+                "Cotando",
+                "Cliente Ativo",
+                "Cliente Inativo"
+            ],
+            "description": "Tipo de lead/Status do cliente"
+        },
+        "resumo": {
+            "type": "string",
+            "description": "Resumo/observa\u00e7\u00f5es sobre o lead"
+        },
+        "convertido": {
+            "type": "boolean",
+            "default": false,
+            "description": "Lead foi convertido?"
+        },
+        "responsavel": {
+            "type": "string",
+            "description": "E-mail do usu\u00e1rio respons\u00e1vel"
+        }
+    },
+    "required": [
+        "data_cadastro",
+        "empresa",
+        "tipo",
+        "responsavel"
+    ]
+}

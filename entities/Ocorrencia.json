@@ -1,0 +1,41 @@
+{
+    "name": "Ocorrencia",
+    "type": "object",
+    "properties": {
+        "tipo": {
+            "type": "string",
+            "enum": [
+                "Reclama\u00e7\u00e3o",
+                "Feedback Positivo"
+            ],
+            "description": "Tipo de ocorr\u00eancia"
+        },
+        "titulo": {
+            "type": "string",
+            "description": "T\u00edtulo da ocorr\u00eancia"
+        },
+        "descricao": {
+            "type": "string",
+            "description": "Descri\u00e7\u00e3o detalhada"
+        },
+        "data_ocorrencia": {
+            "type": "string",
+            "format": "date",
+            "description": "Data da ocorr\u00eancia"
+        },
+        "cliente": {
+            "type": "string",
+            "description": "Nome do cliente envolvido"
+        },
+        "responsavel": {
+            "type": "string",
+            "description": "Quem registrou"
+        }
+    },
+    "required": [
+        "tipo",
+        "titulo",
+        "data_ocorrencia",
+        "cliente"
+    ]
+}
