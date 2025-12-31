@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { Button } from "@/Components/ui/button";
-import { Input } from "@/Components/ui/input";
-import { Card, CardContent, CardHeader, CardTitle } from "@/Components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Plus, Search, Filter, Download, Eye } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
@@ -13,8 +13,8 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/Components/ui/select";
-import { Badge } from "@/Components/ui/badge";
+} from "@/components/ui/select";
+import { Badge } from "@/components/ui/badge";
 import { format } from "date-fns";
 import { formatDisplayDate } from "@/utils";
 import {
@@ -23,12 +23,12 @@ import {
   DialogHeader,
   DialogTitle,
   DialogFooter,
-} from "@/Components/ui/dialog";
-import { Label } from "@/Components/ui/label";
+} from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
 
-import LeadsTable from "../Components/leads/LeadsTable";
-import LeadFilters from "../Components/leads/LeadFilters";
-import LeadDetailDialog from "../Components/leads/LeadDetailDialog";
+import LeadsTable from "../components/leads/LeadsTable";
+import LeadFilters from "../components/leads/LeadFilters";
+import LeadDetailDialog from "../components/leads/LeadDetailDialog";
 
 export default function Leads() {
   const navigate = useNavigate();
