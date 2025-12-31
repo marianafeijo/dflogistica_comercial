@@ -177,29 +177,14 @@ export default function Leads() {
 
       <Card className="shadow-lg border-0">
         <CardHeader className="border-b">
-          <div className="flex flex-col md:flex-row gap-4">
-            <div className="flex-1 relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-              <Input
-                placeholder="Buscar por empresa, e-mail ou responsável..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10"
-              />
-            </div>
-            <Button
-              variant="outline"
-              onClick={() => setShowFilters(!showFilters)}
-              className="gap-2"
-            >
-              <Filter className="w-4 h-4" />
-              Filtros {Object.keys(filters).length > 0 && `(${Object.keys(filters).length})`}
-            </Button>
-          </div>
-
-          {showFilters && (
-            <LeadFilters filters={filters} setFilters={setFilters} />
-          )}
+          <LeadFilters
+            filters={filters}
+            setFilters={setFilters}
+            searchTerm={searchTerm}
+            setSearchTerm={setSearchTerm}
+            showFilters={showFilters}
+            setShowFilters={setShowFilters}
+          />
         </CardHeader>
         <CardContent className="p-0">
           <LeadsTable
