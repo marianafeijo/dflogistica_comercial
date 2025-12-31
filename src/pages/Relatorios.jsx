@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from "react";
-import { base44 } from "@/api/base44Client";
+import { api } from "@/services/api";
 import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { format, subMonths, addMonths, startOfMonth, endOfMonth, parseISO, isSameMonth } from "date-fns";
@@ -58,7 +58,7 @@ export default function Relatorios() {
   const { data: proposalsData } = useQuery({
     queryKey: ['proposals'],
     queryFn: async () => {
-      const data = await base44.entities.Proposal.list();
+      const data = await api.entities.Proposal.list();
       return Array.isArray(data) ? data : [];
     }
   });
@@ -67,7 +67,7 @@ export default function Relatorios() {
   const { data: leadsData } = useQuery({
     queryKey: ['leads'],
     queryFn: async () => {
-      const data = await base44.entities.Lead.list();
+      const data = await api.entities.Lead.list();
       return Array.isArray(data) ? data : [];
     }
   });

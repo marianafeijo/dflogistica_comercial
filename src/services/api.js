@@ -95,11 +95,11 @@ const matchesFilter = (item, filter) => {
     return Object.entries(filter).every(([key, value]) => item[key] === value);
 };
 
-export const base44 = {
+export const api = {
     auth: {
         me: async () => {
             seedData(); // Ensure data exists when app starts
-            const session = localStorage.getItem('base44_session');
+            const session = localStorage.getItem('user_session');
             if (!session) return null;
             return JSON.parse(session);
         },
@@ -109,13 +109,13 @@ export const base44 = {
             const users = db.get('users');
             const user = users.find(u => u.email === email);
             if (user && password === 'DFLog123') {
-                localStorage.setItem('base44_session', JSON.stringify(user));
+                localStorage.setItem('user_session', JSON.stringify(user));
                 return user;
             }
             throw new Error('Credenciais inválidas');
         },
         logout: async () => {
-            localStorage.removeItem('base44_session');
+            localStorage.removeItem('user_session');
             window.location.href = '/login'; // Force redirect using window location for safety
         }
     },

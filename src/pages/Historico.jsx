@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { base44 } from "@/api/base44Client";
+import { api } from "@/services/api";
 import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -25,13 +25,13 @@ export default function Historico() {
 
   const { data: user } = useQuery({
     queryKey: ['currentUser'],
-    queryFn: () => base44.auth.me(),
+    queryFn: () => api.auth.me(),
   });
 
   const { data: completedTasks, isLoading } = useQuery({
     queryKey: ['allCompletedTasks'],
     queryFn: async () => {
-      return await base44.entities.Task.filter({
+      return await api.entities.Task.filter({
         status: 'Concluída'
       }, '-data_conclusao', 500);
     },

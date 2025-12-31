@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { base44 } from "@/api/base44Client";
+import { api } from "@/services/api";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -55,7 +55,10 @@ export default function Workflow() {
 
     const { data: templates, isLoading } = useQuery({
         queryKey: ['workflowTemplates'],
-        queryFn: () => base44.entities.WorkflowTemplate.list('ordem'),
+        queryFn: async () => {
+            const data = await api.entities.WorkflowTemplate.list('ordem');
+            return data;
+        },
         initialData: [],
     });
 
@@ -81,7 +84,7 @@ export default function Workflow() {
     };
 
     const createMutation = useMutation({
-        mutationFn: (data) => base44.entities.WorkflowTemplate.create(data),
+        mutationFn: (data) => api.entities.WorkflowTemplate.create(data),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['workflowTemplates'] });
             setNewTemplate({
@@ -103,10 +106,10 @@ export default function Workflow() {
 
     const updateMutation = useMutation({
         mutationFn: async ({ id, data }) => {
-            await base44.entities.WorkflowTemplate.update(id, data);
+            await api.entities.WorkflowTemplate.update(id, data);
 
             // Update future tasks based on this template
-            const allTasks = await base44.entities.Task.list();
+            const allTasks = await api.entities.Task.list();
             const today = new Date().toISOString().split('T')[0];
 
             // Find tasks that match this template's characteristics and are in the future or today
@@ -120,7 +123,7 @@ export default function Workflow() {
             if (template) {
                 const updatePromises = tasksToUpdate
                     .filter(task => task.tipo === template.tipo && task.descricao === template.descricao)
-                    .map(task => base44.entities.Task.update(task.id, {
+                    .map(task => api.entities.Task.update(task.id, {
                         tipo: data.tipo,
                         descricao: data.descricao,
                         modelo_mensagem: data.modelo_mensagem,
@@ -142,7 +145,7 @@ export default function Workflow() {
     });
 
     const deleteMutation = useMutation({
-        mutationFn: (id) => base44.entities.WorkflowTemplate.delete(id),
+        mutationFn: (id) => api.entities.WorkflowTemplate.delete(id),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['workflowTemplates'] });
             toast({

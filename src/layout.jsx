@@ -18,7 +18,7 @@ import {
     SidebarTrigger,
 } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
-import { base44 } from "@/api/base44Client";
+import { api } from "@/services/api";
 import { useQuery } from "@tanstack/react-query";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
@@ -66,11 +66,11 @@ export default function Layout({ children }) {
 
     const { data: user } = useQuery({
         queryKey: ['currentUser'],
-        queryFn: () => base44.auth.me(),
+        queryFn: () => api.auth.me(),
     });
 
-    const handleLogout = () => {
-        base44.auth.logout();
+    const handleLogout = async () => {
+        await api.auth.logout();
     };
 
     const toggleSection = (sectionTitle) => {

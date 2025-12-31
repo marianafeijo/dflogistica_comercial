@@ -12,7 +12,7 @@ import { Separator } from "@/components/ui/separator";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { useQuery } from "@tanstack/react-query";
-import { base44 } from "@/api/base44Client";
+import { api } from "@/services/api";
 import { startOfMonth, isSameMonth, parseISO, isValid } from 'date-fns';
 import { ptBR } from "date-fns/locale";
 import {
@@ -37,7 +37,7 @@ export default function LeadDetailDialog({ lead, onClose }) {
 
     const { data: proposals = [] } = useQuery({
         queryKey: ['proposals'],
-        queryFn: () => base44.entities.Proposal.list(),
+        queryFn: () => api.entities.Proposal.list(),
     });
 
     if (!lead) return null;

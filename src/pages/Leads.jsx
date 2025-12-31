@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { base44 } from "@/api/base44Client";
+import { api } from "@/services/api";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -53,7 +53,7 @@ export default function Leads() {
     queryKey: ['leads'],
     queryFn: async () => {
       try {
-        return await base44.entities.Lead.list('-created_date');
+        return await api.entities.Lead.list('-created_date');
       } catch {
         return [];
       }
@@ -72,9 +72,9 @@ export default function Leads() {
 
   const deleteMutation = useMutation({
     mutationFn: async (id) => {
-      const tasks = await base44.entities.Task.filter({ lead_id: id });
-      await Promise.all(tasks.map(task => base44.entities.Task.delete(task.id)));
-      await base44.entities.Lead.delete(id);
+      const tasks = await api.entities.Task.filter({ lead_id: id });
+      await Promise.all(tasks.map(task => api.entities.Task.delete(task.id)));
+      await api.entities.Lead.delete(id);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['leads'] });

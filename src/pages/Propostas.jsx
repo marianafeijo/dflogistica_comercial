@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from "react";
-import { base44 } from "@/api/base44Client";
+import { api } from "@/services/api";
 import { formatDisplayDate } from "@/utils";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -107,35 +107,35 @@ export default function Propostas() {
 
     const { data: proposals = [] } = useQuery({
         queryKey: ['proposals'],
-        queryFn: () => base44.entities.Proposal.list(),
+        queryFn: () => api.entities.Proposal.list(),
     });
 
     const { data: leads = [] } = useQuery({
         queryKey: ['leads'],
-        queryFn: () => base44.entities.Lead.list(),
+        queryFn: () => api.entities.Lead.list(),
     });
 
     const { data: sellers = [] } = useQuery({
         queryKey: ['sellers'],
         queryFn: async () => {
-            const users = await base44.entities.User.list();
+            const users = await api.entities.User.list();
             return users.filter(u => (u.roles || [u.role]).includes('Vendedor'));
         },
     });
 
     const { data: locations = [] } = useQuery({
         queryKey: ['originDestinations'],
-        queryFn: () => base44.entities.OriginDestination.list(),
+        queryFn: () => api.entities.OriginDestination.list(),
     });
 
     const { data: costs = [] } = useQuery({
         queryKey: ['operationalCosts'],
-        queryFn: () => base44.entities.OperationalCost.list(),
+        queryFn: () => api.entities.OperationalCost.list(),
     });
 
     const { data: terms = [] } = useQuery({
         queryKey: ['paymentTerms'],
-        queryFn: () => base44.entities.PaymentTerm.list(),
+        queryFn: () => api.entities.PaymentTerm.list(),
         initialData: [],
     });
 
@@ -195,7 +195,7 @@ export default function Propostas() {
     }, [freteReais, totalGastos, formData.freteDolar, formData.ptax, formData.kmNacional, formData.kmInternacional, formData.freteiroReais]);
 
     const createMutation = useMutation({
-        mutationFn: (data) => base44.entities.Proposal.create({
+        mutationFn: (data) => api.entities.Proposal.create({
             ...data,
             status: "Pendente",
             dataCriacao: new Date().toISOString(),

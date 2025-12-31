@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { base44 } from "@/api/base44Client";
+import { api } from "@/services/api";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -44,18 +44,18 @@ export default function Ocorrencias() {
 
   const { data: ocorrencias, isLoading } = useQuery({
     queryKey: ['ocorrencias'],
-    queryFn: () => base44.entities.Ocorrencia.list('-data_ocorrencia'),
+    queryFn: () => api.entities.Ocorrencia.list('-data_ocorrencia'),
     initialData: [],
   });
 
   const { data: leads } = useQuery({
     queryKey: ['leadsForOcorrencias'],
-    queryFn: () => base44.entities.Lead.list(),
+    queryFn: () => api.entities.Lead.list(),
     initialData: [],
   });
 
   const createMutation = useMutation({
-    mutationFn: (data) => base44.entities.Ocorrencia.create(data),
+    mutationFn: (data) => api.entities.Ocorrencia.create(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['ocorrencias'] });
       setShowDialog(false);

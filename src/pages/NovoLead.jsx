@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { base44 } from "@/api/base44Client";
+import { api } from "@/services/api";
 import { useQuery, useMutation } from "@tanstack/react-query";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { ArrowLeft, Save, Loader2, Plus, Trash2, Star } from "lucide-react";
+import { format, addDays, parseISO } from "date-fns";
 import { Badge } from "@/components/ui/badge";
 
 const SETORES = [
@@ -30,11 +31,13 @@ const LOCAIS = [
   "Argentina", "Uruguai", "Chile", "Paraguai"
 ];
 
-export default function EditarLead() {
-  const { id } = useParams();
+export default function NovoLead() {
   const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [contatos, setContatos] = useState([]);
+  const [contatos, setContatos] = useState([
+    { nome: '', email: '', celular: '' }
+  ]);
+  const [errorMessage, setErrorMessage] = useState('');
 
   const { data: user } = useQuery({
     queryKey: ['currentUser'],
@@ -49,51 +52,32 @@ export default function EditarLead() {
 
   const sellers = users.filter(u => (u.roles || []).includes('Vendedor'));
 
-  const { data: lead, isLoading } = useQuery({
-    queryKey: ['lead', id],
+  const { data: workflowTemplates } = useQuery({
+    queryKey: ['workflowTemplates'],
     queryFn: async () => {
-      if (!id) return null;
-      const results = await base44.entities.Lead.filter({ id });
-      return results[0];
+      const templates = await base44.entities.WorkflowTemplate.filter({ ativo: true }, 'ordem');
+      return templates;
     },
-    enabled: !!id
+    initialData: [],
   });
 
   const [formData, setFormData] = useState({
-    data_cadastro: '',
+    data_cadastro: format(new Date(), 'yyyy-MM-dd'),
     setor: '',
     empresa: '',
-    estado: '',
+    estado: '', // we will use this for Local
     site: '',
-    tipo: '',
+    tipo: 'Cliente Ativo',
     resumo: '',
-    status: '',
-    responsavel: '',
+    status: 'Novo',
+    responsavel: user?.email || '',
   });
 
   useEffect(() => {
-    if (lead) {
-      setFormData({
-        data_cadastro: lead.data_cadastro,
-        setor: lead.setor,
-        empresa: lead.empresa,
-        estado: lead.estado,
-        site: lead.site,
-        tipo: lead.tipo,
-        resumo: lead.resumo,
-        status: lead.status,
-        responsavel: lead.responsavel,
-      });
-      setContatos(lead.contatos || []);
+    if (user?.email && !formData.responsavel) {
+      setFormData(prev => ({ ...prev, responsavel: user.email }));
     }
-  }, [lead]);
-
-  const updateMutation = useMutation({
-    mutationFn: (data) => base44.entities.Lead.update(id, data),
-    onSuccess: () => {
-      navigate(createPageUrl("Leads"));
-    },
-  });
+  }, [user]);
 
   const formatPhone = (value) => {
     const numbers = value.replace(/\D/g, '');
@@ -136,17 +120,32 @@ export default function EditarLead() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     if (contatos.length === 0 || !contatos.some(c => c.nome)) {
-      alert('Adicione pelo menos um contato');
+      setErrorMessage('Adicione pelo menos um contato com nome.');
       return;
     }
+    setErrorMessage('');
+
     setIsSubmitting(true);
-    updateMutation.mutate({ ...formData, contatos: contatos.filter(c => c.nome) });
+
+    try {
+      const leadData = {
+        ...formData,
+        contatos: contatos.filter(c => c.nome),
+        responsavel: formData.responsavel || user?.email,
+      };
+
+      await api.entities.Lead.create(leadData);
+
+      navigate(createPageUrl("Leads"));
+    } catch (error) {
+      console.error("Erro ao criar lead:", error);
+      setErrorMessage("Erro ao criar lead. Tente novamente.");
+    }
+
     setIsSubmitting(false);
   };
-
-  if (isLoading) return <div className="p-6">Carregando...</div>;
-  if (!id) return <div className="p-6">ID não fornecido.</div>;
 
   return (
     <div className="p-6 space-y-6 bg-gradient-to-br from-gray-50 to-blue-50 min-h-screen">
@@ -159,8 +158,13 @@ export default function EditarLead() {
           <ArrowLeft className="w-4 h-4" />
         </Button>
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Editar Cliente</h1>
-          <p className="text-gray-600 mt-1">Atualize as informações do cliente</p>
+          <h1 className="text-3xl font-bold text-gray-900">Novo Cliente</h1>
+          <p className="text-gray-600 mt-1">Cadastre uma nova empresa na sua base</p>
+          {errorMessage && (
+            <div className="mt-2 p-3 bg-red-100 border border-red-300 text-red-700 rounded-md text-sm">
+              {errorMessage}
+            </div>
+          )}
         </div>
       </div>
 
@@ -249,7 +253,11 @@ export default function EditarLead() {
 
               <div className="space-y-2">
                 <Label htmlFor="responsavel">Responsável *</Label>
-                <Select value={formData.responsavel} onValueChange={(value) => setFormData({ ...formData, responsavel: value })}>
+                <Select
+                  value={formData.responsavel}
+                  onValueChange={(value) => setFormData({ ...formData, responsavel: value })}
+                  disabled={user?.role === 'Vendedor'} // Disable if Vendedor
+                >
                   <SelectTrigger>
                     <SelectValue placeholder="Selecione o responsável" />
                   </SelectTrigger>
@@ -259,6 +267,7 @@ export default function EditarLead() {
                     ))}
                   </SelectContent>
                 </Select>
+                {user?.role === 'Vendedor' && <p className="text-xs text-gray-500">Vendedores só podem cadastrar leads para si mesmos.</p>}
               </div>
             </div>
 
@@ -362,7 +371,7 @@ export default function EditarLead() {
             ) : (
               <>
                 <Save className="w-4 h-4" />
-                Salvar Alterações
+                Salvar Cliente
               </>
             )}
           </Button>

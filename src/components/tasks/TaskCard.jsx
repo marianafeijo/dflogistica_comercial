@@ -11,7 +11,7 @@ import {
     DialogTitle,
     DialogFooter,
 } from "@/components/ui/dialog";
-import { base44 } from "@/api/base44Client";
+import { api } from "@/services/api";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
@@ -112,8 +112,8 @@ export default function TaskCard({ task, onComplete, completed, isOverdue, showO
                 animate={{ opacity: 1, x: 0 }}
             >
                 <Card className={`p-4 transition-all ${completed ? 'bg-gray-50 opacity-75' :
-                        isOverdue ? 'bg-red-50 border-red-300 border-2 hover:shadow-md' :
-                            'bg-white hover:shadow-md'
+                    isOverdue ? 'bg-red-50 border-red-300 border-2 hover:shadow-md' :
+                        'bg-white hover:shadow-md'
                     }`}>
                     <div className="flex items-start justify-between gap-4">
                         <div className="flex items-start gap-3 flex-1">

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { base44 } from "@/api/base44Client";
+import { api } from "@/services/api";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -51,7 +51,10 @@ export default function Configuracoes() {
 
   const { data: users = [], isLoading } = useQuery({
     queryKey: ['users'],
-    queryFn: () => base44.entities.User.list(),
+    queryFn: async () => {
+      const data = await api.entities.User.list();
+      return data;
+    },
   });
 
   // Mock create user since base44 doesn't strictly have a User.create yet, we'll simulate adding to the list via a custom method on client.
@@ -67,7 +70,7 @@ export default function Configuracoes() {
   const createMutation = useMutation({
     mutationFn: async (data) => {
       // Simulating ID generation
-      return await base44.entities.User.create({ ...data, full_name: data.nome });
+      await api.entities.User.create({ ...newUser, id: Date.now().toString() });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['users'] });

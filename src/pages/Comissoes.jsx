@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from "react";
 import { format, parseISO, startOfMonth, endOfMonth, isBefore, isSameMonth, isValid } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { base44 } from "@/api/base44Client";
+import { api } from "@/services/api";
 import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -29,17 +29,17 @@ import {
 export default function Comissoes() {
     const { data: users = [] } = useQuery({
         queryKey: ['users'],
-        queryFn: () => base44.entities.User.list(),
+        queryFn: () => api.entities.User.list(),
     });
 
     const { data: proposals = [] } = useQuery({
         queryKey: ['proposals'],
-        queryFn: () => base44.entities.Proposal.list(),
+        queryFn: () => api.entities.Proposal.list(),
     });
 
     const { data: leads = [] } = useQuery({
         queryKey: ['leads'],
-        queryFn: () => base44.entities.Lead.list(),
+        queryFn: () => api.entities.Lead.list(),
     });
 
     const [selectedDate, setSelectedDate] = useState(new Date());

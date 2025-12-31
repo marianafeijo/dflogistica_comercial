@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { base44 } from "@/api/base44Client";
+import { api } from "@/services/api";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Calendar } from "@/components/ui/calendar";
@@ -43,13 +43,13 @@ export default function Agenda() {
 
     const { data: eventos } = useQuery({
         queryKey: ['eventos'],
-        queryFn: () => base44.entities.Evento.list('-data_inicio'),
+        queryFn: () => api.entities.Evento.list('-data_inicio'),
         initialData: [],
     });
 
     const { data: leads } = useQuery({
         queryKey: ['leadsForAgenda'],
-        queryFn: () => base44.entities.Lead.list(),
+        queryFn: () => api.entities.Lead.list(),
         initialData: [],
     });
 

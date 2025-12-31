@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { base44 } from "@/api/base44Client";
+import { api } from "@/services/api";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -33,14 +33,14 @@ export default function Tarefas() {
 
   const { data: user } = useQuery({
     queryKey: ['currentUser'],
-    queryFn: () => base44.auth.me(),
+    queryFn: () => api.auth.me(),
   });
 
   const { data: allTasks, isLoading } = useQuery({
     queryKey: ['allPendingTasks'],
     queryFn: async () => {
       // Fetch ALL pending tasks
-      return await base44.entities.Task.filter({
+      return await api.entities.Task.filter({
         status: 'Pendente'
       }, 'data_programada');
     },
@@ -51,14 +51,14 @@ export default function Tarefas() {
   const completeMutation = useMutation({
     mutationFn: async ({ id, observacoes, lead_id }) => {
       // 1. Complete the task
-      await base44.entities.Task.update(id, {
+      await api.entities.Task.update(id, {
         status: 'Concluída',
         data_conclusao: new Date().toISOString(),
         observacoes: observacoes || undefined
       });
 
       // 2. Check if there are any other pending tasks for this lead
-      const pendingTasks = await base44.entities.Task.filter({
+      const pendingTasks = await api.entities.Task.filter({
         lead_id: lead_id,
         status: 'Pendente'
       });
@@ -72,7 +72,7 @@ export default function Tarefas() {
 
       if (remainingTasks.length === 0) {
         // No more tasks, update Lead status
-        await base44.entities.Lead.update(lead_id, {
+        await api.entities.Lead.update(lead_id, {
           status: 'Lead sem retorno'
         });
       }

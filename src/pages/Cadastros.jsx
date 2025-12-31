@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { base44 } from "@/api/base44Client";
+import { api } from "@/services/api";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -55,27 +55,27 @@ export default function Cadastros() {
 
     const { data: costs = [] } = useQuery({
         queryKey: ['operationalCosts'],
-        queryFn: () => base44.entities.OperationalCost.list(),
+        queryFn: () => api.entities.OperationalCost.list(),
     });
 
     const { data: terms = [] } = useQuery({
         queryKey: ['paymentTerms'],
-        queryFn: () => base44.entities.PaymentTerm.list(),
+        queryFn: () => api.entities.PaymentTerm.list(),
     });
 
     const { data: locations = [] } = useQuery({
         queryKey: ['originDestinations'],
-        queryFn: () => base44.entities.OriginDestination.list(),
+        queryFn: () => api.entities.OriginDestination.list(),
     });
 
     const { data: users = [] } = useQuery({
         queryKey: ['users'],
-        queryFn: () => base44.entities.User.list(),
+        queryFn: () => api.entities.User.list(),
     });
 
     // Mutations for Auxiliares
     const addCostMutation = useMutation({
-        mutationFn: (data) => base44.entities.OperationalCost.create(data),
+        mutationFn: (data) => api.entities.OperationalCost.create({ ...data, id: Date.now().toString() }),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['operationalCosts'] });
             setNewCost({ nome: '', valor: 0 });

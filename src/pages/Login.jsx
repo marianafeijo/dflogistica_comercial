@@ -1,6 +1,7 @@
+```javascript
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { base44 } from '@/api/base44Client';
+import { api } from "@/services/api";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -20,7 +21,7 @@ export default function Login() {
         setLoading(true);
 
         try {
-            await base44.auth.login(email, password);
+            const user = await api.auth.login(email, password);
             navigate('/');
         } catch (err) {
             setError(err.message || 'Falha ao realizar login');
